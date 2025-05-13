@@ -1,0 +1,47 @@
+﻿
+@{
+    ViewData["Title"] = "Create";
+}
+
+<form id="categoryForm">
+    <div class="form-group">
+        <label for="CategoryName">Category name</label>
+        <input type="text" class="form-control" id="catName" aria-placeholder="Enter Category name">
+      
+    </div>
+    <div class="form-group">
+        <label for="Description">Description</label>
+        <input type="text" class="form-control" id="catDescription" placeholder="Description">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+@section Scripts{
+    <script>
+        $('#categoryForm').submit(function(e){
+            e.preventDefault();
+
+            const categoryData = {
+                name: $('#catName').val(),
+                description : $('#catDescription').val(),
+            };
+
+            $.ajax({
+                url : 'https://localhost:7142/api/Category',
+                method : 'POST',
+                contentType: 'application/json',
+                data : JSON.stringify(categoryData),
+                success: function(){
+                    alert("Category add successfully");
+                    
+                },
+                error: function(xhr, status, error){
+                    console.error("Error adding category:", status, error);
+                    alert("Error adding category");
+                }
+            
+            });
+        });
+    </script>
+}
