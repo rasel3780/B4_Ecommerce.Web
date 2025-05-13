@@ -1,42 +1,43 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Index";
 }
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <h2 class=""> Product Catalog</h2>
 
 <div id="productList" class="row">
-    <!--load here-->
+    <!-- Products will load here -->
 </div>
 
-<script>
-    $(document).ready(function(){
-        const apiUrl = 'https://localhost:7142/api/Products';
-
-        $.ajax({
-            url: apiUrl,
-            method: 'GET',
-            success: function(data){
-                let html = '';
-                $.each(data, function(index, product){
-                    html +=`
-                        <div class = 'col-md-4 mb-4'>
-                            <div class="card" h-100>
-                            <img src="${product.imageUrl}" class="card-img-top">
-                            <div class="card-body">
-                                <h5 class="card-title">${product.name}</h5>
-                                <p class="card-text">${product.description}</p>
-                                <p><strong>${product.price}</strong></p>
-                                <p><small>Stock:${product.stockQuantity}</small></p>
+@section Scripts {
+    <script>
+        $(document).ready(function(){
+            $.ajax({
+                url: 'https://localhost:7142/api/Products',
+                method: 'GET',
+                success: function(data){
+                    let html = '';
+                    $.each(data, function(index, product){
+                        html += `
+                            <div class='col-md-4 mb-4'>
+                                <div class="card h-100">
+                                    <img src="${product.imageUrl}" id=productImg class="card-img-top" alt="${product.name}">
+                                    <div class="card-body">
+                                        <h5 class="card-title">${product.name}</h5>
+                                        <p class="card-text">${product.description}</p>
+                                        <p><strong>$${product.price}</strong></p>
+                                        <p><small>Stock: ${product.stockQuantity}</small></p>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                       </div>
-                    `              
-                });
-                $('#productList').html(html)
-            }        
+                        `;
+                    });
+                    $('#productList').html(html);
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error fetching products:", status, error);
+                    $('#productList').html('<div class="col-12"><p class="text-danger">Error loading products. Please try again later.</p></div>');
+                }
+            });
         });
-    });
-</script>
+    </script>
+}
